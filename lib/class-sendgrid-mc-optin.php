@@ -148,7 +148,7 @@ class Sendgrid_OptIn_API_Endpoint{
     $headers->addSubstitution( '%confirmation_link%', array( $confirmation_link ) )
             ->addCategory( 'wp_sendgrid_subscription_widget' );
 
-    add_filter( 'sendgrid_mail_text', function() use ( &$content_text ) { return $content_text; } );
+    add_filter('wp_mail_content_type', 'set_html_content_type');
 
     $result = wp_mail( $to, $subject, $content, $headers );
 

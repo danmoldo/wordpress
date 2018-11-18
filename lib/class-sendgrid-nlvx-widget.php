@@ -217,16 +217,14 @@ class SendGrid_NLVX_Widget extends WP_Widget {
         if ( ! isset( $_POST['sendgrid_mc_first_name'] ) or empty( $_POST['sendgrid_mc_first_name'] ) ) {
           return self::ERROR_EMAIL_SEND;
         }
-        if ( ! isset( $_POST['sendgrid_mc_last_name'] ) or empty( $_POST['sendgrid_mc_last_name'] ) ) {
-          return self::ERROR_EMAIL_SEND;
-        }
       }
 
-      if ( isset( $_POST['sendgrid_mc_first_name'] ) and isset( $_POST['sendgrid_mc_last_name'] ) ) {
+      if ( isset( $_POST['sendgrid_mc_first_name'] ) ) {
         Sendgrid_OptIn_API_Endpoint::send_confirmation_email(
           $email,
           htmlspecialchars( $_POST['sendgrid_mc_first_name'], ENT_QUOTES, 'UTF-8' ),
-          htmlspecialchars( $_POST['sendgrid_mc_last_name'], ENT_QUOTES, 'UTF-8' )
+          '',
+          true
         );
       } else {
         Sendgrid_OptIn_API_Endpoint::send_confirmation_email( $email );
@@ -249,11 +247,6 @@ class SendGrid_NLVX_Widget extends WP_Widget {
       $first_name_label = stripslashes( Sendgrid_Tools::get_mc_first_name_label() );
       if ( false == $first_name_label ) {
         $first_name_label = Sendgrid_Settings::DEFAULT_FIRST_NAME_LABEL;
-      }
-
-      $last_name_label = stripslashes( Sendgrid_Tools::get_mc_last_name_label() );
-      if ( false == $last_name_label ) {
-        $last_name_label = Sendgrid_Settings::DEFAULT_LAST_NAME_LABEL;
       }
 
       $subscribe_label = stripslashes( Sendgrid_Tools::get_mc_subscribe_label() );
@@ -281,7 +274,6 @@ class SendGrid_NLVX_Widget extends WP_Widget {
         if ( 'true' == Sendgrid_Tools::get_mc_opt_req_fname_lname() ) {
           $require_fname_lname = "required";
           $first_name_label .= "<sup>*</sup>";
-          $last_name_label .= "<sup>*</sup>";
         }
 
         echo '<div class="sendgrid_mc_fields" style="' . $input_padding . '">';
@@ -290,14 +282,6 @@ class SendGrid_NLVX_Widget extends WP_Widget {
         echo '  </div>';
         echo '  <div class="sendgrid_mc_input_div">';
         echo '    <input class="sendgrid_mc_input sendgrid_mc_input_first_name" id="sendgrid_mc_first_name" name="sendgrid_mc_first_name" type="text" value=""' . $require_fname_lname . ' />';
-        echo '  </div>';
-        echo '</div>';
-        echo '<div class="sendgrid_mc_fields" style="' . $input_padding . '">';
-        echo '  <div class="sendgrid_mc_label_div">';
-        echo '    <label for="sendgrid_mc_last_name" class="sendgrid_mc_label sendgrid_mc_label_last_name">' . $last_name_label . ' : </label>';
-        echo '  </div>';
-        echo '  <div class="sendgrid_mc_input_div">';
-        echo '    <input class="sendgrid_mc_input sendgrid_mc_input_last_name" id="sendgrid_mc_last_name" name="sendgrid_mc_last_name" type="text" value="" ' . $require_fname_lname . '/>';
         echo '  </div>';
         echo '</div>';
       }
